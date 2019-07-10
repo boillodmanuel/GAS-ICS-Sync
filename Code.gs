@@ -40,7 +40,7 @@ var performAction = true;
 // uncomment to debug without any others actions
 //debug = true;
 //performAction = false;
-emailWhenUpdated = false;
+//emailWhenUpdated = false;
 
 /*
 *=========================================
@@ -206,7 +206,7 @@ function main(){
         if (performAction) {
           var resultEvent;
           if (event.isAllDay){
-            resultEvent =targetCalendar.createAllDayEvent(event.title, 
+            resultEvent = targetCalendar.createAllDayEvent(event.title, 
                                                     event.startTime,
                                                     event.endTime,
                                                     {
@@ -214,7 +214,7 @@ function main(){
                                                       description : event.description
                                                     });
           } else {
-            resultEvent =targetCalendar.createEvent(event.title, 
+            resultEvent = targetCalendar.createEvent(event.title, 
                                                     event.startTime,
                                                     event.endTime,
                                                     {
@@ -269,16 +269,39 @@ function main(){
           var updated = false
           var eventUpdates = ""
 
-          if(e.getStartTime().getTime() != fe.startTime.getTime() || e.getEndTime().getTime() != fe.endTime.getTime()) {
-            if(e.getStartTime().getTime() != fe.startTime.getTime()) {
-              eventUpdates += " - startTime: " + formatDate(e.getStartTime()) + " => " + formatDate(fe.startTime)
+          if (e.isAllDayEvent() != fe.isAllDay) {
+            if (fe.isAllDay) {
+              eventUpdates += " becomes all day event: " + formatDate(e.getStartTime()) + " => " + formatDate(fe.startTime)
+              if (performAction) e.setAllDayDates(fe.startTime, fe.endTime);
+            } else {
+              eventUpdates += " stop being an all day event: " + formatDate(e.getStartTime()) + " => " + formatDate(fe.startTime)
+              if (performAction) e.setTime(fe.startTime, fe.endTime);
             }
-            if (e.getEndTime().getTime() != fe.endTime.getTime()) {
-              eventUpdates += " - endTime: " + formatDate(e.getEndTime()) + " => " + formatDate(fe.endTime)
-            }
-            if (performAction) e.setTime(fe.startTime, fe.endTime);
             updated = true;
+          } else if (!fe.isAllDay) {
+            if(e.getStartTime().getTime() != fe.startTime.getTime() || e.getEndTime().getTime() != fe.endTime.getTime()) {
+              if(e.getStartTime().getTime() != fe.startTime.getTime()) {
+                eventUpdates += " - startTime: " + formatDate(e.getStartTime()) + " => " + formatDate(fe.startTime)
+              }
+              if (e.getEndTime().getTime() != fe.endTime.getTime()) {
+                eventUpdates += " - endTime: " + formatDate(e.getEndTime()) + " => " + formatDate(fe.endTime)
+              }
+              if (performAction) e.setTime(fe.startTime, fe.endTime);
+              updated = true;
+            }
+          } else { // fe.isAllDay
+            if(e.getAllDayStartDate().getTime() != fe.startTime.getTime() || e.getAllDayEndDate().getTime() != fe.endTime.getTime()) {
+              if(e.getAllDayStartDate().getTime() != fe.startTime.getTime()) {
+                eventUpdates += " - [allday] startTime: " + formatDate(e.getAllDayStartDate()) + " => " + formatDate(fe.startTime)
+              }
+              if (e.getAllDayEndDate().getTime() != fe.endTime.getTime()) {
+                eventUpdates += " - [allday] endTime: " + formatDate(e.getAllDayEndDate()) + " => " + formatDate(fe.endTime)
+              }
+              if (performAction) e.setAllDayDates(fe.startTime, fe.endTime);
+              updated = true;
+            }
           }
+          
           if(e.getTitle() != fe.title) {
             eventUpdates += " - title: " + e.getTitle() + " => " + fe.title
             if (performAction) e.setTitle(fe.title);
@@ -311,7 +334,7 @@ function main(){
   if (updates.length == 0) {
     Logger.log("Done: No updates")
   } else {
-    Logger.log("Done: " + updates.length + "updates")
+    Logger.log("Done: " + updates.length + " updates")
   }
 }
 
