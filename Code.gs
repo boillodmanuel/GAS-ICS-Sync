@@ -38,8 +38,8 @@ var debug = false;
 var performAction = true;
 
 // uncomment to debug without any others actions
-//debug = true;
-//performAction = false;
+// debug = true;
+// performAction = false;
 //emailWhenUpdated = false;
 
 /*
@@ -154,15 +154,17 @@ function main(){
   var jcalData = ICAL.parse(response);
   var component = new ICAL.Component(jcalData);
 
+  /*
   vtimezone = component.getFirstSubcomponent("vtimezone");
   if (vtimezone != null)
     ICAL.TimezoneService.register(vtimezone);
-
-  //var vtimezones = component.getAllSubcomponents("vtimezone");  
-  //Logger.log("TZs" + vtimezones.length)
-  //for each (var vtimezone in vtimezones){
-    //ICAL.TimezoneService.register(vtimezone);
-  //}
+  */
+  
+  var vtimezones = component.getAllSubcomponents("vtimezone");  
+  Logger.log("TZs" + vtimezones.length)
+  for each (var vtimezone in vtimezones){
+    ICAL.TimezoneService.register(vtimezone);
+  }
   
   //Map the vevents into custom event objects
   var vevents = component.getAllSubcomponents("vevent");    
