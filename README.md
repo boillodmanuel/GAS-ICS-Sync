@@ -1,3 +1,10 @@
+# Reference
+
+- google script : https://script.google.com/d/1vPHHj6wTqLpYMb26w_zUk2vGYECX6mVdlEVIig7PGFL7zcYHexFtkpNQ/edit
+- google calendar service documentation : https://developers.google.com/apps-script/reference/calendar/
+- ical api doc : http://mozilla-comm.github.io/ical.js/api/
+
+
 # GAS-ICS-Sync
 
 [If you want to use this, please copy the script from here](https://script.google.com/d/1QeZFLSM1EkuFvYcryECI_xH-IZVe1-IxGRq_n6OoXp1CmVtSeTeigEx4/edit?usp=sharing) 
